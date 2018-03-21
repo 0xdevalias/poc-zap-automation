@@ -1,0 +1,30 @@
+version: "3"
+services:
+
+# Ref: https://github.com/zaproxy/zaproxy/blob/develop/docker/zap-baseline.py#L72-L98
+# Ref: https://github.com/zaproxy/zaproxy/wiki/ZAP-Baseline-Scan
+# Ref: https://github.com/zaproxy/zap-core-help/wiki/HelpCmdline
+  zapbaseline:
+    image: owasp/zap2docker-stable:2.7.0
+    environment:
+      - SCANTARGET
+    command: [
+      "zap-baseline.py",
+      "-t", "${SCANTARGET}",
+      "-m", "10",  # Spider Time (mins)
+      "-T", "20", # Max time for zap to start, passive scan to run (mins)
+      "-r", "zap-baseline-${SCANHOST}.html",
+      "-w", "zap-baseline-${SCANHOST}.md",
+      "-x", "zap-baseline-${SCANHOST}.xml",
+      "-J", "zap-baseline-${SCANHOST}.json",
+      "-a",        # Include alpha passive scan rules
+#      "-j",        # Use AJAX spider as well as normal one
+#      "-l", "PASS" # Minimum level of findings to show,
+      "-l", "IGNORE", # Minimum level of findings to show,
+      "-d"        # Include debug messages (is this equiv to verbose?)
+#      "-n", "",     # context file which will be loaded prior to spidering the target
+#      "-p", "",     # progress file which specifies issues that are being addressed
+    ]
+    volumes:
+      - "/tmp/.X11-unix:/tmp/.X11-unix"
+      - "./reports:/zap/wrk"

@@ -1,0 +1,43 @@
+version: "3"
+services:
+
+  # Ref: https://github.com/zaproxy/zaproxy/wiki/Docker
+  # Ref: https://github.com/zaproxy/zap-api-go/tree/master/example
+  # Ref: https://github.com/zaproxy/zaproxy/wiki/WebSwing
+  # Ref: https://github.com/zaproxy/zap-core-help/wiki/HelpCmdline
+  zaproxy:
+    image: owasp/zap2docker-bare:2.7.0
+#    image: owasp/zap2docker-stable:2.7.0
+    command: [
+      "zap.sh",
+#      "zap-x.sh",
+#      "zap-webswing.sh",
+      "-daemon",
+      "-host", "0.0.0.0", "-port", "8080",
+      "-config", "api.disablekey=true",
+      "-config", "api.addrs.addr.name=.*",
+      "-config", "api.addrs.addr.regex=true"
+#      "-addoninstall FOOXYZ",
+#      "-addonupdate"
+    ]
+    ports:
+      - "127.0.0.1:8080:8080"
+#    volumes:
+#      - "/tmp/.X11-unix:/tmp/.X11-unix"
+#      - "${HOME}/.Xauthority:/home/zap/.Xauthority"
+#    environment:
+#      DISPLAY: "${IP}:0"
+
+  # Ref: https://github.com/psiinon/bodgeit
+  bodgeit:
+    image: psiinon/bodgeit:latest
+    ports:
+      - "127.0.0.1:8081:8080"
+
+  # Ref: https://github.com/bkimminich/juice-shop
+  # Ref: http://help.owasp-juice.shop
+  juiceshop:
+    image: bkimminich/juice-shop:latest
+    ports:
+      - "127.0.0.1:8082:3000"
+
